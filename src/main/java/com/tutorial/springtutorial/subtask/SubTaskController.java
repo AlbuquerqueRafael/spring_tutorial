@@ -32,7 +32,7 @@ public class SubTaskController {
 		return new ResponseEntity<Map<String, String>>(response, HttpStatus.CREATED);
     }
     
-    @RequestMapping(value = "/task/{idTask}/subtask/", method = RequestMethod.PUT)
+    @RequestMapping(value = "/task/{idTask}/subtask", method = RequestMethod.PUT)
     public ResponseEntity<Map<String, String>> update (@PathVariable("idTask") Long idTask, 
                                           @RequestBody SubTask task) {
 

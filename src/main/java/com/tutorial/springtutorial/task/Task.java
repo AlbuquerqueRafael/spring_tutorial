@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tutorial.springtutorial.subtask.SubTask;
 
 import javax.persistence.CascadeType;
@@ -30,31 +31,32 @@ public class Task implements Serializable {
     @Column(nullable = false)
     private LocalDate date;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "task")
+    @JsonBackReference
     private List<SubTask> subTasks;
 
-	protected Task() {
+	protected Task () {
 	}
 
-	public Task(String name, LocalDate date, List<SubTask> subTasks) {
+	public Task (String name, LocalDate date, List<SubTask> subTasks) {
         this.name = name;
         this.date = date;
         this.subTasks = subTasks;
 	}
 
-	public String getName() {
+	public String getName () {
 		return this.name;
     }
     
-    public LocalDate getDate() {
+    public LocalDate getDate () {
 		return this.date;
     }
     
-    public Long getID() {
+    public Long getID () {
 		return this.id;
     }
     
-    public List<SubTask> getSubTasks() {
+    public List<SubTask> getSubTasks () {
         return this.subTasks;
     }
 

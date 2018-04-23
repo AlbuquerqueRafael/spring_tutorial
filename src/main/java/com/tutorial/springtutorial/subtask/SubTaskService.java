@@ -26,7 +26,7 @@ public class SubTaskService {
     
     private Map<String, String> response = new HashMap<String, String>();
 
-    public List<SubTask> getAllSubTasks(Long id) {
+    public List<SubTask> getAllSubTasks (Long id) {
         Optional<Task> optTask = taskRepository.findById(id);
 
         if (!optTask.isPresent()) {
@@ -46,8 +46,9 @@ public class SubTaskService {
         }
 
         Task task = optTask.get();
-        task.getSubTasks().add(subTask);
-        taskRepository.save(task);
+        subTask.setTask(task);
+        
+        subTaskRepository.save(subTask);
 
         response.put("response", "Subtask with name " + subTask.getName() + " was successfully persisted");
         return response;
@@ -59,35 +60,27 @@ public class SubTaskService {
         if (!optSubTask.isPresent()) {
             throw new SubTaskNotFoundException("SubTask don't exists or is not connected with this task");
         }
-
+        
+        Optional<Task> task = taskRepository.findById(idTask);
+        subTask.setTask(task.get());
         subTaskRepository.save(subTask);
 
         response.put("response", "Subtask with name " + subTask.getName() + " was successfully updated");
         return response;
     }
     
-    // Need Improvement
-	public Map<String, String> delete(Long idTask, Long idSubTask){
-        Optional<Task> optTask = taskRepository.findById(idTask);
-        Optional<SubTask> optSubTask = subTaskRepository.findById(idSubTask);
-
-        if (!optTask.isPresent()) {
-            throw new TaskNotFoundException("Task don't exists");
-        }
-
+    public Map<String, String> delete (Long idTask, Long idSubTask){
+        Optional<SubTask> optSubTask = subTaskRepository.getSubTaskFromTask(idTask, idSubTask);
+        
         if (!optSubTask.isPresent()) {
             throw new SubTaskNotFoundException("SubTask don't exists or is not connected with this task");
         }
 
-        Task task = optTask.get();
-        SubTask subTask = optSubTask.get();
-
-        task.getSubTasks().remove(subTask);
-        taskRepository.save(task);
-
-        response.put("response", "Subtask with name " + subTask.getName() + " was successfully deleted");
+        subTaskRepository.deleteById(idSubTask);;
+        response.put("response", "Subtask with name  was successfully deleted");
         return response;
     }
+
 	
 	
 }
